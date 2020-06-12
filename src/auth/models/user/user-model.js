@@ -1,34 +1,85 @@
 'use strict';
 
-const bcrypt = require('bcryptjs');
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
-const userSchema = require('./auth-schema.js');
+const schema = require('./auth-schema.js');
 const SECRET = process.env.SECRET;
+const Model = require('../mongo.js');
+const bcryptjs = require('bcryptjs');
 
-userSchema.create = async function (record) {
-  /**
-     * record
-     * {username:"yasmin",password:"1234"}
-     */
+const roles = {
+  user : ['read'],
+  writer : ['read' , 'create'],
+  editor : ['read' , 'create' ,'change'],
+  admin : ['read','create' ,'update','delete'],
+};
 
-  if (!userSchema[record.userName]) {
-    record.password = await bcrypt.hash(record.password, 5);
-    userSchema[record.userName] = record;
-    return record;
+/**
+* Model Model
+* @constructor Products
+*/
+
+class Users extends Model {
+  constructor() {
+    super(schema);
   }
-  return Promise.reject(); 
-};
-userSchema.authenticateBasic = async function (user, pass) {
-  const valid = await bcrypt.compare(pass, userSchema[user.password]);
-  return valid ? userSchema[user] : Promise.reject('wrong password');
-};
-userSchema.generateToken = function (user) {
-  const token = jwt.sign({ userName: user.userName }, SECRET);
-  return token;
-};
-userSchema.list =  async function(){
-  let results = await this.find({});
-  return results;
-};
+  async save(record){
+    const isUsedBefore = await this.get({username : record.username});
+    // console.log('is used befor' , isUsedBefore);
+    if(isUsedBefore.length == 0){
+      const userData = await this.create(record);
+      return userData;
+    }
+    
+  }
+  async authenticateBasic(user,pass){
+    const result = await this.get({username : user});
+    // console.log('authenticateBasic' , result);
+    // let index=result[0];
+    // console.log(index.password , 'zab6a?');
+    const valid = await bcryptjs.compare(pass, result[0].password);
+    // console.log( result[0].password , 'haek?');
+    
+    return valid ? result : Promise.reject('wrong password');
 
-module.exports = userSchema;
+  }
+  generateToken(user){
+    // console.log('user in generate token', user);
+    const token =  jwt.sign({
+      expiresIn: 90000,
+      algorithm:  'RS384',
+      username: user.username,
+      capabilities : roles[user.role],
+    }, SECRET);
+    return token;
+  }
+
+  async authenticateToken  (token) {
+    // console.log('token', token);
+    // ما هذا اكلام !!
+    try {
+      const tokenValue = await jwt.verify(token, SECRET);
+      const result = await this.get({username : tokenValue.username});
+      // console.log('token', token);
+      console.log('tttt' , result);
+      
+      if (result.length != 0) {
+        return Promise.resolve(tokenValue);
+      } else {
+        return Promise.reject('User is not found!');
+      }
+    } catch (e) {
+      return Promise.reject(e.message);
+    }
+  }
+  can(permision){
+    if(permision){
+
+      return Promise.resolve(true);
+    }else{
+      return Promise.reject(false);
+    }
+  }
+}
+
+module.exports = new Users();

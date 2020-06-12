@@ -1,9 +1,29 @@
-'use strict';
+const express = require('express');
 
-// eslint-disable-next-line no-unused-vars
-const base64 = require('base-64');
-const Users = require('./models/user/user-model.js');
+const bearerMiddleware = require('./middleware/bearer-auth.js');
+const acl = require('./middleware/acl-middleware.js');
 
-module.exports = (req, res, next) => {
- 
-};
+const router = express.Router();
+
+
+router.get('/secret', bearerMiddleware, (req,res) => {
+  res.json(req.user);
+});
+
+router.post('/read', bearerMiddleware, acl('read'), (req, res) => {
+  res.send('OK!');
+});
+
+router.post('/create', bearerMiddleware, acl('create'), (req, res) => {
+  res.send('OK!');
+});
+
+router.put('/update', bearerMiddleware, acl('update'), (req, res) => {
+  res.send('OK!');
+});
+
+router.delete('/delete', bearerMiddleware, acl('delete'), (req, res) => {
+  res.send('OK!');
+});
+
+module.exports = router;
