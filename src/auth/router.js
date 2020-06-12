@@ -2,29 +2,29 @@
 
 const express = require('express');
 const router = express.Router();
-const users = require('./models/user-model.js');
-const basicAuth = require('./basic-auth-middleware.js');
+const users = require('./models/user/user-model.js');
+const basicAuth = require('./middleware/basic.js');
 
+router.post('/signup', saveInfo);
+router.post('/signin', basicAuth, getUserInfo);
+router.get('/users' , getAllUsers);
 
-router.post('/signup',(req,res) =>
-{
-  users.create(req.body)
-    .then(user => {
-      let token = users.generateToken(user);
-      res.status(200).send({token});
-    })
-    .catch(err => console.error(err));
+async function saveInfo (req,res){
+  try{
+    const user = await users.save(req.body);
+    const token = users.generateToken(user);
+    res.json({ token });
+  }catch(err){
+    res.status(403).send('user already exists');
+  }
+}
+function getUserInfo(req, res){
+  res.json({ token: req.token , user: req.user });
+}
 
-}); 
-
-router.post('/signin',basicAuth,(req,res) =>
-{
-  res.status(200).send({token: req.token});
-}); 
-router.get('/users',basicAuth,(req,res) =>
-{
-  let listed = users.list;
-  res.status(200).json({listed});
-}); 
+async function getAllUsers (req,res){
+  const allUsers = await users.get({});
+  res.json( {users : allUsers} );
+}
 
 module.exports = router;
