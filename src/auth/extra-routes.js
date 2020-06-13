@@ -11,19 +11,19 @@ router.get('/secret', bearerMiddleware, (req,res) => {
 });
 
 router.post('/read', bearerMiddleware, acl('read'), (req, res) => {
-  res.send('OK!');
+  res.send('you can only read the data!');
 });
 
 router.post('/create', bearerMiddleware, acl('create'), (req, res) => {
-  res.send('OK!');
+  res.send('you can create new data and read it!');
 });
 
 router.put('/update', bearerMiddleware, acl('update'), (req, res) => {
-  res.send('OK!');
+  res.send('you can update data also create new data and read it!');
 });
 
 router.delete('/delete', bearerMiddleware, acl('delete'), (req, res) => {
-  res.send('OK!');
+  res.send('you can delete,update data also create new data and read it!');
 });
 
 module.exports = router;

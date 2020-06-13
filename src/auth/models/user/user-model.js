@@ -38,7 +38,7 @@ class Users extends Model {
     // let index=result[0];
     // console.log(index.password , 'zab6a?');
     const valid = await bcryptjs.compare(pass, result[0].password);
-    // console.log( result[0].password , 'haek?');
+    console.log(valid, 'haek?');
     
     return valid ? result : Promise.reject('wrong password');
 
@@ -56,7 +56,6 @@ class Users extends Model {
 
   async authenticateToken  (token) {
     // console.log('token', token);
-    // ما هذا اكلام !!
     try {
       const tokenValue = await jwt.verify(token, SECRET);
       const result = await this.get({username : tokenValue.username});

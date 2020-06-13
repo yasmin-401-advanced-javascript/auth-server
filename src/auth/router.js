@@ -15,7 +15,7 @@ async function saveInfo(req,res){
   }catch(err){
     console.error(err);
     
-    res.status(403).send('user already exists');
+    res.status(403).json({message :'user already exists'});
   }
     
 }
