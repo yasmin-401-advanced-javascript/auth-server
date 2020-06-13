@@ -12,13 +12,8 @@ class Model {
      */
     
   get(_id) {
-    if(_id){
-      const queryObject = _id ?  _id  : {};
-      return this.schema.find(queryObject);
-    }else{
-      return this.schema.find({});
-    }
-
+    const queryObject = _id ?  _id  : {};
+    return this.schema.find(queryObject);
   }
   /**
      * add data to database

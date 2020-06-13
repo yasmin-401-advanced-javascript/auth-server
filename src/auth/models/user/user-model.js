@@ -35,6 +35,7 @@ class Users extends Model {
     const token = jwt.sign({ username: user.username }, SECRET);
     return token;
   }
+  
 }
 
 module.exports = new Users();

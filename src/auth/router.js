@@ -15,7 +15,7 @@ async function saveInfo (req,res){
     const token = users.generateToken(user);
     res.json({ token });
   }catch(err){
-    res.status(403).send('user already exists');
+    res.status(403).json({message :'user already exists'});
   }
 }
 function getUserInfo(req, res){
