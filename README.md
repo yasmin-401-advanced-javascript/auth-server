@@ -12,7 +12,15 @@ we will have these `routes` for this app:
 
 ### Links and Resources :paperclip:
 
+**class 11**
 [Submission PR](https://github.com/yasmin-401-advanced-javascript/auth-server/pull/5)
+**class 12**
+[Submission PR](https://github.com/yasmin-401-advanced-javascript/auth-server/pull/5)
+**class 13**
+[Submission PR](https://github.com/yasmin-401-advanced-javascript/auth-server/pull/2)
+**class 14**
+[Submission PR](https://github.com/yasmin-401-advanced-javascript/auth-server/pull/1)
+
 
 ## Library Used
 
