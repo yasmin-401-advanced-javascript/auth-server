@@ -1,0 +1,27 @@
+div{
+    text-align: center;
+    box-shadow: 0 0 10px #929292, 0 0 40px #797979, 0 0 80px #737b82;
+    width: 50%;
+    margin: auto;
+    height: 300px;
+    margin-top: 60px;
+}
+button{
+    display: flex;
+    background-color: #22292e;
+    color: aliceblue;
+    height: 60px;
+    margin: auto;
+    border-radius: 5px;
+    width: 60%;
+}
+
+a{
+    text-decoration: none;
+    color: white;
+    text-align: center;
+    margin: auto;
+}
+h3{
+    padding-top: 60px;
+}
